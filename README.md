@@ -253,6 +253,8 @@ This codebase uses **camelCase** for all variable and function names throughout,
 
 ---
 
+Built with Python and Claude AI (Anthropic) — developed with assistance via prompt engineering.
+
 ## License
 
 MIT
