@@ -1,4 +1,4 @@
-# llm-code-eval
+# LLM Code Eval
 
 **An automated evaluation harness for LLM-generated Python code.**
 
