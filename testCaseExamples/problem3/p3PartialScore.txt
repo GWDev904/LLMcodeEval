@@ -1,0 +1,19 @@
+def serialize(root):
+    # Bug: loses all structural information
+    # Only stores values in pre-order, no null markers
+    if not root:
+        return ''
+    result = str(root.val)
+    if root.left:
+        result += ',' + serialize(root.left)
+    if root.right:
+        result += ',' + serialize(root.right)
+    return result
+
+def deserialize(data):
+    # Bug: can only reconstruct a single node
+    # Has no way to know where left vs right children go
+    if not data:
+        return None
+    vals = data.split(',')
+    return TreeNode(int(vals[0]))

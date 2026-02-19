@@ -1,0 +1,20 @@
+class LRUCache:
+    # Buggy: get() does not refresh recency
+    # Buggy: updating existing key duplicates it in order list
+
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = {}
+        self.order = []
+
+    def get(self, key):
+        # Bug: should move key to end (mark as recently used)
+        return self.cache.get(key, -1)
+
+    def put(self, key, value):
+        if key not in self.cache and len(self.cache) >= self.capacity:
+            oldest = self.order.pop(0)
+            del self.cache[oldest]
+        self.cache[key] = value
+        if key not in self.order:
+            self.order.append(key)

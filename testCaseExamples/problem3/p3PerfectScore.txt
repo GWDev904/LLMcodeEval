@@ -1,0 +1,37 @@
+from collections import deque
+
+def serialize(root):
+    """Encode tree to BFS level-order string with N as null sentinel."""
+    if not root:
+        return 'N'
+    result = []
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        if node is None:
+            result.append('N')
+        else:
+            result.append(str(node.val))
+            queue.append(node.left)
+            queue.append(node.right)
+    return ','.join(result)
+
+def deserialize(data):
+    """Reconstruct tree from BFS level-order encoded string."""
+    if data == 'N':
+        return None
+    vals = data.split(',')
+    root = TreeNode(int(vals[0]))
+    queue = deque([root])
+    i = 1
+    while queue and i < len(vals):
+        node = queue.popleft()
+        if vals[i] != 'N':
+            node.left = TreeNode(int(vals[i]))
+            queue.append(node.left)
+        i += 1
+        if i < len(vals) and vals[i] != 'N':
+            node.right = TreeNode(int(vals[i]))
+            queue.append(node.right)
+        i += 1
+    return root

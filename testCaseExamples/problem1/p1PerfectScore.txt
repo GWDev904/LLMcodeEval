@@ -1,0 +1,9 @@
+def twoSum(nums, target):
+    """Return indices of two numbers that add to target using a hash map."""
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return sorted([seen[complement], i])
+        seen[num] = i
+    return []

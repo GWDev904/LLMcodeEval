@@ -1,0 +1,129 @@
+{
+  "id": "003",
+  "title": "Serialize and Deserialize Binary Tree",
+  "difficulty": "hard",
+  "description": "Design two functions that serialize and deserialize a binary tree.\n\n`serialize(root)` converts a binary tree to a string.\n`deserialize(data)` converts that string back to the original tree.\n\nA `TreeNode` is defined as:\n  class TreeNode:\n      def __init__(self, val=0, left=None, right=None)\n\nThe evaluation harness injects TreeNode for you \u2014 do NOT redefine it.\n\nThe round-trip must be lossless: `deserialize(serialize(root))` must produce a structurally identical tree.",
+  "functionSignature": "def serialize(root) -> str:\n    ...\n\ndef deserialize(data: str):\n    ...",
+  "constraints": [
+    "Number of nodes: 0 <= n <= 10^4",
+    "Node values: -1000 <= val <= 1000",
+    "The serialisation format is your choice but must be lossless",
+    "Do not redefine TreeNode in your submission"
+  ],
+  "examples": [
+    {
+      "input": "root = TreeNode(1, TreeNode(2), TreeNode(3))",
+      "output": "Round-trip produces identical tree: [1, 2, 3]",
+      "explanation": "Any valid encoding that survives a round-trip is accepted."
+    }
+  ],
+  "preamble": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef tree_to_list(root):\n    \"\"\"BFS level-order list for comparison.\"\"\"\n    if not root:\n        return []\n    from collections import deque\n    result, queue = [], deque([root])\n    while queue:\n        node = queue.popleft()\n        if node:\n            result.append(node.val)\n            queue.append(node.left)\n            queue.append(node.right)\n        else:\n            result.append(None)\n    while result and result[-1] is None:\n        result.pop()\n    return result\n",
+  "testCases": [
+    {
+      "label": "Empty tree (None root)",
+      "args": "deserialize(serialize(None))",
+      "expected": null,
+      "ordered": true,
+      "weight": 1
+    },
+    {
+      "label": "Single node",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(42))))",
+      "expected": [
+        42
+      ],
+      "ordered": true,
+      "weight": 1
+    },
+    {
+      "label": "Three-node balanced tree",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(1, TreeNode(2), TreeNode(3)))))",
+      "expected": [
+        1,
+        2,
+        3
+      ],
+      "ordered": true,
+      "weight": 2
+    }
+  ],
+  "hiddenTestCases": [
+    {
+      "label": "HIDDEN: Left-skewed tree (linked list shape)",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(1, TreeNode(2, TreeNode(3, TreeNode(4, TreeNode(5))))))))",
+      "expected": [
+        1,
+        2,
+        null,
+        3,
+        null,
+        4,
+        null,
+        5
+      ],
+      "ordered": true,
+      "weight": 3
+    },
+    {
+      "label": "HIDDEN: Right-skewed tree (linked list shape)",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(1, None, TreeNode(2, None, TreeNode(3, None, TreeNode(4)))))))",
+      "expected": [
+        1,
+        null,
+        2,
+        null,
+        3,
+        null,
+        4
+      ],
+      "ordered": true,
+      "weight": 3
+    },
+    {
+      "label": "HIDDEN: Negative and zero values",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(0, TreeNode(-500), TreeNode(1000)))))",
+      "expected": [
+        0,
+        -500,
+        1000
+      ],
+      "ordered": true,
+      "weight": 3
+    },
+    {
+      "label": "HIDDEN: All duplicate values \u2014 structure preserved",
+      "args": "tree_to_list(deserialize(serialize(TreeNode(5, TreeNode(5, TreeNode(5), None), TreeNode(5)))))",
+      "expected": [
+        5,
+        5,
+        5,
+        5
+      ],
+      "ordered": true,
+      "weight": 4
+    },
+    {
+      "label": "HIDDEN: Idempotency \u2014 double round-trip (s\u2192d\u2192s\u2192d)",
+      "args": "tree_to_list(deserialize(serialize(deserialize(serialize(TreeNode(7, TreeNode(3), TreeNode(15, TreeNode(9), TreeNode(20))))))))",
+      "expected": [
+        7,
+        3,
+        15,
+        null,
+        null,
+        9,
+        20
+      ],
+      "ordered": true,
+      "weight": 4
+    }
+  ],
+  "hints": [
+    "BFS (level-order) with a null sentinel is the most intuitive approach.",
+    "DFS pre-order with sentinel values also works cleanly.",
+    "Watch out: use a sentinel that cannot be a real node value (e.g. 'N' is safe since node values are integers).",
+    "Negative values and zero are valid \u2014 do not assume all values are positive.",
+    "Right-only and left-only trees expose bugs in solutions that assume balanced structure."
+  ],
+  "referenceSolution": "from collections import deque\n\ndef serialize(root):\n    if not root:\n        return 'N'\n    result = []\n    queue = deque([root])\n    while queue:\n        node = queue.popleft()\n        if node is None:\n            result.append('N')\n        else:\n            result.append(str(node.val))\n            queue.append(node.left)\n            queue.append(node.right)\n    return ','.join(result)\n\ndef deserialize(data):\n    if data == 'N':\n        return None\n    vals = data.split(',')\n    root = TreeNode(int(vals[0]))\n    queue = deque([root])\n    i = 1\n    while queue and i < len(vals):\n        node = queue.popleft()\n        if vals[i] != 'N':\n            node.left = TreeNode(int(vals[i]))\n            queue.append(node.left)\n        i += 1\n        if i < len(vals) and vals[i] != 'N':\n            node.right = TreeNode(int(vals[i]))\n            queue.append(node.right)\n        i += 1\n    return root"
+}

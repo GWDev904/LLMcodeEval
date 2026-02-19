@@ -1,0 +1,83 @@
+{
+  "id": "001",
+  "title": "Two Sum",
+  "difficulty": "easy",
+  "description": "Given an array of integers `nums` and an integer `target`, return the indices of the two numbers that add up to `target`. You may assume each input has exactly one solution. You may NOT use the same element twice. Return indices in ascending order.",
+  "functionSignature": "def twoSum(nums: list[int], target: int) -> list[int]:",
+  "constraints": [
+    "2 <= len(nums) <= 10^4",
+    "Each element: -10^9 <= nums[i] <= 10^9",
+    "Exactly one valid solution exists",
+    "Return indices sorted ascending"
+  ],
+  "examples": [
+    { "input": "twoSum([2, 7, 11, 15], 9)", "output": "[0, 1]", "explanation": "nums[0] + nums[1] = 2 + 7 = 9" },
+    { "input": "twoSum([3, 2, 4], 6)",       "output": "[1, 2]", "explanation": "nums[1] + nums[2] = 2 + 4 = 6" }
+  ],
+  "testCases": [
+    {
+      "label": "Basic case",
+      "args": "twoSum([2, 7, 11, 15], 9)",
+      "expected": [0, 1],
+      "ordered": true,
+      "weight": 1
+    },
+    {
+      "label": "Answer is not first two elements",
+      "args": "twoSum([3, 2, 4], 6)",
+      "expected": [1, 2],
+      "ordered": true,
+      "weight": 1
+    },
+    {
+      "label": "Duplicate values",
+      "args": "twoSum([3, 3], 6)",
+      "expected": [0, 1],
+      "ordered": true,
+      "weight": 1
+    }
+  ],
+  "hiddenTestCases": [
+    {
+      "label": "HIDDEN: Negative numbers",
+      "args": "twoSum([-3, 4, 3, 90], 0)",
+      "expected": [0, 2],
+      "ordered": true,
+      "weight": 2
+    },
+    {
+      "label": "HIDDEN: Target is zero, both negatives",
+      "args": "twoSum([-1, -2, -3, -4, -5], -8)",
+      "expected": [2, 4],
+      "ordered": true,
+      "weight": 2
+    },
+    {
+      "label": "HIDDEN: Large array, answer at the end",
+      "args": "twoSum(list(range(1000)) + [999999, 1000000], 1999999)",
+      "expected": [1000, 1001],
+      "ordered": true,
+      "weight": 3
+    },
+    {
+      "label": "HIDDEN: Same value appears many times, only one valid pair",
+      "args": "twoSum([1, 5, 5, 5, 1], 10)",
+      "expected": [1, 2],
+      "ordered": true,
+      "weight": 2
+    },
+    {
+      "label": "HIDDEN: Minimum array size",
+      "args": "twoSum([1000000000, -999999999], 1)",
+      "expected": [0, 1],
+      "ordered": true,
+      "weight": 2
+    }
+  ],
+  "hints": [
+    "A naive O(n²) solution works for small inputs but fails large arrays.",
+    "A hash map (dict) reduces this to O(n) time and O(n) space.",
+    "Watch out: you cannot use the same index twice — track indices, not values."
+  ],
+  "referenceSolution": "def twoSum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in seen:\n            return sorted([seen[complement], i])\n        seen[num] = i\n    return []"
+}

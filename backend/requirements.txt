@@ -1,0 +1,11 @@
+# llm-code-eval backend dependencies
+# Install with: pip install -r requirements.txt
+
+# Web framework
+flask>=3.0.0
+
+# Cross-Origin Resource Sharing (allows React frontend to call the API)
+flask-cors>=4.0.0
+
+# All other dependencies (ast, subprocess, re, json, textwrap, dataclasses)
+# are Python stdlib — no additional installs needed.
